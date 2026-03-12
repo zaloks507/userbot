@@ -51,8 +51,6 @@ def help(client, message):
 
 <code>.addbul</code> — троллинг ответом на каждое сообщение пользователя
 <code>.fake</code> — фейк сообщение фотографией
-<code>.typing</code> — эффект тайпинга
-<code>.stoptyping</code> — остановить тайпинг
 """, parse_mode=enums.ParseMode.HTML)
 
 # --------- ПИНГ --------- 
@@ -641,35 +639,6 @@ def auto(cient, message):
         phrases = random.choice(phrases)
 
         message.reply_text(phrases)
-
-# --------- --------- ---------
-
-# --------- TYPING ---------
-
-def typing_loop(client, chat_id):
-    chat_id = int(chat_id)  # Приведение к числу
-    while typing_active.get(chat_id):
-        try:
-            client.send_chat_action(chat_id, ChatAction.TYPING)
-        except Exception as e:
-            print(f"[ERROR] Тайпинг: {e}")
-        time.sleep(4)
-
-@app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def start_typing(client, message):
-    chat_id = int(message.chat.id)
-    if typing_active.get(chat_id):
-        message.edit("Тайпинг уже включен ✅")
-        return
-    typing_active[chat_id] = True
-    threading.Thread(target=typing_loop, args=(client, chat_id), daemon=True).start()
-    message.edit("Бесконечный тайпинг включен ✍️")
-
-@app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
-def stop_typing(client, message):
-    chat_id = int(message.chat.id)
-    typing_active[chat_id] = False
-    message.edit("Тайпинг выключен 🛑")
 
 # --------- --------- ---------
 
