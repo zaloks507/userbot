@@ -4,13 +4,10 @@ from pyrogram.errors import FloodWait, RPCError, BadRequest
 import os
 import textwrap
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-
-import io
 from io import BytesIO
-
 import time
-
 import random
+import threading
 
 font_user = ImageFont.truetype("font/Sjz.ttf", 50)
 font_text = ImageFont.truetype("font/Sjz.ttf", 65)
@@ -21,8 +18,7 @@ bio = "𝙵𝟺𝙲𝙺 𝚉𝟺𝚕𝟶𝙺𝚂 | #ждулето"
 avatar = "avatar.png"
 
 troll_active = {}
-
-import os
+typing_active = {}
 
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
@@ -54,6 +50,8 @@ def help(client, message):
 
 <code>.addbul</code> — троллинг ответом на каждое сообщение пользователя
 <code>.fake</code> — фейк сообщение фотографией
+<code>.typing</code> — эффект тайпинга
+<code>.stoptyping</code> — остановить тайпинг
 """, parse_mode=enums.ParseMode.HTML)
 
 # --------- ПИНГ --------- 
@@ -309,7 +307,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL/Troll.txt", 'r', encoding='utf-8') as file:
+        with open("TROLL\Troll.txt", 'r', encoding='utf-8') as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -342,7 +340,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL/Troll2.txt", "r", encoding="utf-8") as file:
+        with open("TROLL\Troll2.txt", "r", encoding="utf-8") as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -374,7 +372,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL/Troll3.txt", "r", encoding="utf-8") as file:
+        with open("TROLL\Troll3.txt", "r", encoding="utf-8") as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -642,6 +640,36 @@ def auto(cient, message):
         phrases = random.choice(phrases)
 
         message.reply_text(phrases)
+
+# --------- --------- ---------
+
+# --------- TYPING ---------
+
+def typing(client, chat_id):
+
+    while typing_active.get(chat_id):
+        client.send_chat_action(chat_id, 'typing')
+        time.sleep(4)
+
+@app.on_message(filters.me & filters.command("typing", prefixes='.'))
+def typing(client, message):
+
+    chat_id = message.chat.id
+
+    typing_active[chat_id] = True
+
+    threading.Thread(target = typing, args=(client, chat_id)).start()
+
+    message.edit("Бесконечный тайпинг включен")
+
+@app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
+def stoptyp(client, message):
+
+    chat_id = message.chat.id
+
+    typing_active[chat_id] = False
+
+    message.edit("Бесконечный тайпинг выключен")
 
 # --------- --------- ---------
 
