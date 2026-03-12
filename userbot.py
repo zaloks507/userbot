@@ -1,6 +1,7 @@
 ﻿from pyrogram import Client, filters, enums
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait, RPCError, BadRequest
+from pyrogram.enums import ChatAction
 import os
 import textwrap
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -25,14 +26,6 @@ API_HASH = os.getenv("API_HASH")
 string_session = os.getenv("STRING_SESSION")
 
 app = Client("session", api_id=API_ID, api_hash=API_HASH, session_string=string_session)
-
-def typing_loop(client, chat_id):
-    while typing_active.get(chat_id):
-        try:
-            client.send_chat_action(chat_id, "typing")
-        except Exception as e:
-            print(f"Ошибка тайпинга: {e}")
-        time.sleep(4)
 
 @app.on_message(filters.me & filters.command("help", prefixes='.'))
 def help(client, message):
@@ -653,25 +646,30 @@ def auto(cient, message):
 
 # --------- TYPING ---------
 
-@app.on_message(filters.me & filters.command("typing", prefixes="."))
+def typing_loop(client, chat_id):
+    chat_id = int(chat_id)  # Приведение к числу
+    while typing_active.get(chat_id):
+        try:
+            client.send_chat_action(chat_id, ChatAction.TYPING)
+        except Exception as e:
+            print(f"[ERROR] Тайпинг: {e}")
+        time.sleep(4)
+
+@app.on_message(filters.me & filters.command("typing", prefixes='.'))
 def start_typing(client, message):
-
-    message.edit("Бесконечный тайпинг включен")
-
-    chat_id = message.chat.id
-
+    chat_id = int(message.chat.id)
+    if typing_active.get(chat_id):
+        message.edit("Тайпинг уже включен ✅")
+        return
     typing_active[chat_id] = True
-
     threading.Thread(target=typing_loop, args=(client, chat_id), daemon=True).start()
+    message.edit("Бесконечный тайпинг включен ✍️")
 
-@app.on_message(filters.me & filters.command("stoptyping", prefixes="."))
-def stoptyp(client, message):
-
-    message.edit("Бесконечный тайпинг выключен")
-
-    chat_id = message.chat.id
-
+@app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
+def stop_typing(client, message):
+    chat_id = int(message.chat.id)
     typing_active[chat_id] = False
+    message.edit("Тайпинг выключен 🛑")
 
 # --------- --------- ---------
 
