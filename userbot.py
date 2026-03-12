@@ -307,7 +307,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL\Troll.txt", 'r', encoding='utf-8') as file:
+        with open("TROLL/Troll.txt", 'r', encoding='utf-8') as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -340,7 +340,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL\Troll2.txt", "r", encoding="utf-8") as file:
+        with open("TROLL/Troll2.txt", "r", encoding="utf-8") as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -372,7 +372,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL\Troll3.txt", "r", encoding="utf-8") as file:
+        with open("TROLL/Troll3.txt", "r", encoding="utf-8") as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
