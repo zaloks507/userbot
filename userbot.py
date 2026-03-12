@@ -26,6 +26,14 @@ string_session = os.getenv("STRING_SESSION")
 
 app = Client("session", api_id=API_ID, api_hash=API_HASH, session_string=string_session)
 
+def typing_loop(client, chat_id):
+    while typing_active.get(chat_id):
+        try:
+            client.send_chat_action(chat_id, "typing")
+        except Exception as e:
+            print(f"Ошибка тайпинга: {e}")
+        time.sleep(4)
+
 @app.on_message(filters.me & filters.command("help", prefixes='.'))
 def help(client, message):
     message.edit_text(
@@ -645,16 +653,10 @@ def auto(cient, message):
 
 # --------- TYPING ---------
 
-def typing_loop(client, chat_id):
-    while typing_active.get(chat_id):
-        try:
-            client.send_chat_action(chat_id, "typing")
-        except Exception as e:
-            print(f"Ошибка тайпинга: {e}")
-        time.sleep(4)
-
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
 def start_typing(client, message):
+
+    message.edit("Бесконечный тайпинг включен")
 
     chat_id = message.chat.id
 
@@ -662,16 +664,14 @@ def start_typing(client, message):
 
     threading.Thread(target=typing_loop, args=(client, chat_id), daemon=True).start()
 
-    message.edit("Бесконечный тайпинг включен")
-
 @app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
 def stoptyp(client, message):
+
+    message.edit("Бесконечный тайпинг выключен")
 
     chat_id = message.chat.id
 
     typing_active[chat_id] = False
-
-    message.edit("Бесконечный тайпинг выключен")
 
 # --------- --------- ---------
 
