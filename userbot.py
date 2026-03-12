@@ -652,7 +652,7 @@ def typing(client, chat_id):
         time.sleep(4)
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def typing(client, message):
+def typing_active(client, message):
 
     chat_id = message.chat.id
 
