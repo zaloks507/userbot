@@ -645,10 +645,12 @@ def auto(cient, message):
 
 # --------- TYPING ---------
 
-def typing(client, chat_id):
-
+def typing_loop(client, chat_id):
     while typing_active.get(chat_id):
-        client.send_chat_action(chat_id, 'typing')
+        try:
+            client.send_chat_action(chat_id, "typing")
+        except Exception as e:
+            print(f"Ошибка тайпинга: {e}")
         time.sleep(4)
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
@@ -658,7 +660,7 @@ def typing_active(client, message):
 
     typing_active[chat_id] = True
 
-    threading.Thread(target = typing, args=(client, chat_id)).start()
+    threading.Thread(target=typing_loop, args=(client, chat_id), daemon=True).start()
 
     message.edit("Бесконечный тайпинг включен")
 
