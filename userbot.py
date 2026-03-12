@@ -673,6 +673,6 @@ def stoptyp(client, message):
 
 # --------- --------- ---------
 
-print("🔥 MONSTER USERBOT STARTED")
+print("ZALOKS USERBOT START")
 
 app.run()
