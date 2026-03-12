@@ -654,7 +654,7 @@ def typing_loop(client, chat_id):
         time.sleep(4)
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def typing_active(client, message):
+def start_typing(client, message):
 
     chat_id = message.chat.id
 
