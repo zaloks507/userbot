@@ -653,7 +653,7 @@ def auto(cient, message):
 
 # --------- TYPING ---------
 
-@app.on_message(filters.me & filters.command("typing", prefixes='.'))
+@app.on_message(filters.me & filters.command("typing", prefixes="."))
 def start_typing(client, message):
 
     message.edit("Бесконечный тайпинг включен")
@@ -664,7 +664,7 @@ def start_typing(client, message):
 
     threading.Thread(target=typing_loop, args=(client, chat_id), daemon=True).start()
 
-@app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
+@app.on_message(filters.me & filters.command("stoptyping", prefixes="."))
 def stoptyp(client, message):
 
     message.edit("Бесконечный тайпинг выключен")
