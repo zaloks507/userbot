@@ -6,6 +6,8 @@ import os
 import textwrap
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from io import BytesIO
+from datetime import date
+from pyrogram import continue_propagation
 import time
 import random
 import threading
@@ -53,14 +55,12 @@ def help(client, message):
 <code>.fake</code> — фейк сообщение фотографией
 """, parse_mode=enums.ParseMode.HTML)
 
-# -----------------------------------------------------------------
+# --------- SUMMER ---------
 
 @app.on_message(filters.me & filters.command("summer", prefixes='.'))
 def check_summer(client, message):
 
-    message.edit("Команда сработала")
-
-    today = date.today
+    today = date.today()
 
     start_summer = date(today.year, 6, 1)
 
@@ -75,6 +75,8 @@ def check_summer(client, message):
         message.edit("Поздравляю с наступлением лета!")
     else:
         message.edit(f"До лета осталось: {delta.days} дней")
+
+# --------- --------- ---------
 
 # --------- ПИНГ --------- 
 
