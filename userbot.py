@@ -7,7 +7,6 @@ import textwrap
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from io import BytesIO
 from datetime import date
-from pyrogram import continue_propagation
 import time
 import random
 import threading
