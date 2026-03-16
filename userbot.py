@@ -53,6 +53,29 @@ def help(client, message):
 <code>.fake</code> — фейк сообщение фотографией
 """, parse_mode=enums.ParseMode.HTML)
 
+# -----------------------------------------------------------------
+
+@app.on_message(filters.me & filters.command("summer", prefixes='.'))
+def check_summer(client, message):
+
+    message.edit("Команда сработала")
+
+    today = date.today
+
+    start_summer = date(today.year, 6, 1)
+
+    if today > start_summer:
+        start_summer = date(today.year + 1, 6, 1)
+
+        message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
+    
+    delta = start_summer - today
+
+    if delta == 0:
+        message.edit("Поздравляю с наступлением лета!")
+    else:
+        message.edit(f"До лета осталось: {delta.days} дней")
+
 # --------- ПИНГ --------- 
 
 @app.on_message(filters.me & filters.command("ping", prefixes='.'))
@@ -642,24 +665,6 @@ def auto(cient, message):
 
 # --------- --------- ---------
 
-@app.on_message(filters.me & filters.command("summer", prefixes='.'))
-def check_summer(client, message):
-
-    today = date.today
-
-    start_summer = date(today.year, 6, 1)
-
-    if today > start_summer:
-        start_summer = date(today.year + 1, 6, 1)
-
-        message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
-    
-    delta = start_summer - today
-
-    if delta == 0:
-        message.edit("Поздравляю с наступлением лета!")
-    else:
-        message.edit(f"До лета осталось: {delta.days} дней")
 
 print("ZALOKS USERBOT START")
 
