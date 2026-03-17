@@ -63,7 +63,7 @@ def help(client, message):
 def typing_loop(client, chat_id):
 
     while typing_active.get(chat_id):
-        client.send_action(chat_id, "typing")
+        client.send_chat_action(chat_id, "typing")
         time.sleep(10)
         
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
