@@ -46,14 +46,46 @@ def help(client, message):
 <code>.prof</code> — изменить что-то в профиле 
 <code>.q</code> — сделать цитату текста фотографией
 
-<code>.troll(1d,2,3)</code> — тролл текстом 
+<code>.troll(1,2,3)</code> — тролл текстом 
 <code>.dox</code> — доксинг 
 <code>.spam</code> — спам сообщениями 
 
 <code>.addbul</code> — троллинг ответом на каждое сообщение пользователя
 <code>.fake</code> — фейк сообщение фотографией
-<code>.summer</code> — сколько дней осталось до SUMMER
+<code>.summer</code> — сколько дней осталось до ЛЕТА
+
+<code>.typing</code> — включение бесконечного тайпинга
+<code>.stoptyping</code> — выключение бесконечного тайпинга 
 """, parse_mode=enums.ParseMode.HTML)
+
+# --------- TYPING ---------
+
+def typing_loop(client, chat_id):
+
+    while typing_active.get(chat_id):
+        client.send_action(chat_id, "typing")
+        time.sleep(10)
+        
+@app.on_message(filters.me & filters.command("typing", prefixes='.'))
+def typing_start(client, message):
+
+    chat_id = message.chat.id
+
+    typing_active[chat_id] = True
+
+    threading.Thread(target=typing_loop, args=(client, message)).start()
+
+    message.edit("Бесконечный тайпинг включен")
+
+@app.on_message(filters.me & filters.command("stoptypinf", prefixes='.'))
+def stop_typ(client, message):
+    chat_id = message.chat.id
+
+    typing_active[chat_id] = False
+
+    message.edit("Бесконечный тайпинг выключен")
+
+# --------------------------------------------
 
 # --------- SUMMER ---------
 
