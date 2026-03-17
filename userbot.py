@@ -61,21 +61,22 @@ def help(client, message):
 # --------- TYPING ---------
 
 def typing_loop(client, chat_id):
-
     while typing_active.get(chat_id):
-        client.send_chat_action(chat_id, "typing")
-        time.sleep(10)
-        
+        try:
+            client.send_chat_action(chat_id, "typing")
+            time.sleep(5)
+        except:
+            break
+
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
 def typing_start(client, message):
-
     chat_id = message.chat.id
 
     typing_active[chat_id] = True
 
     threading.Thread(target=typing_loop, args=(client, chat_id)).start()
 
-    message.edit("Бесконечный тайпинг включен")
+    message.edit("Бесконечный тайпинг включен ✍️")
 
 @app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
 def stop_typ(client, message):
