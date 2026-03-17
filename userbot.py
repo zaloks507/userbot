@@ -63,7 +63,7 @@ def help(client, message):
 def typing_loop(client, chat_id):
     while typing_active.get(chat_id):
         try:
-            client.send_chat_action(chat_id, "typing")
+            client.send_chat_action(chat_id, ChatAction.TYPING)
             time.sleep(5)
         except:
             break
