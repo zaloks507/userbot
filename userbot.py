@@ -61,7 +61,7 @@ def help(client, message):
 # --------- TYPING ---------
 def typing_loop(client, chat_id, thread_id):
     try:
-        while typing_active.get(chat_id, False):
+        while True:
             client.send_chat_action(chat_id, enums.ChatAction.TYPING, message_thread_id=thread_id)
             time.sleep(4)
     except Exception as e:
