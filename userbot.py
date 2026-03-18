@@ -87,7 +87,7 @@ def spam_time(client, message):
 
         time_spam[chat_id] = True
 
-        message.edit(f"<b>Спам начался!</b>\n\nСпящее время: <code>{sleep}{unit}</code> \nТекст: <code>{text}</code>", parse_mode = enums.ParseMode.HTML)
+        message.edit(f"<b>Спам начался!</b>\n\nСпящее время: <code>{sleep}{unit}</code> \nТекст: <code>{text}</code>", parse_mode=enums.ParseMode.HTML)
 
         while time_spam.get(chat_id):
             client.send_message(chat_id, text)
