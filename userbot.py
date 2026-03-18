@@ -9,7 +9,7 @@ from io import BytesIO
 import time
 import random
 import threading
-from datetime import date
+from datetime import datetime, date
 import asyncio
 
 font_user = ImageFont.truetype("font/Sjz.ttf", 50)
@@ -64,10 +64,10 @@ def check_summer(client, message):
 
     today = date.today
 
-    start_summer = datetime(today.year, 6, 1)
+    start_summer = date(today.year, 6, 1)
 
     if today > start_summer:
-        start_summer = datetime(today.year + 1, 6, 1)
+        start_summer = date(today.year + 1, 6, 1)
 
         message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
     
@@ -242,7 +242,7 @@ def dox(client, message):
 <i>ФИО: в паспорте
 ВОЗРАСТ: дата твоего рождения
 ТЕЛЕФОН: +7 дальше сам
-АДРЕСС: где-то за Земле
+АДРЕС: где-то за Земле
 ИНН: в госуслугах
 
 МАМА: сам знаешь
