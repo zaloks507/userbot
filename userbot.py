@@ -62,7 +62,7 @@ def help(client, message):
 @app.on_message(filters.me & filters.command("summer", prefixes='.'))
 def check_summer(client, message):
 
-    today = date.today
+    today = date.today()
 
     start_summer = date(today.year, 6, 1)
 
