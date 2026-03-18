@@ -64,7 +64,6 @@ def unit(value, unit):
     units = {"s": 1, "m": 60, "h": 3600}
     return value * units.get(units, 1)
 
-
 @app.on_message(filters.me & filters.command("sp", prefixes='.'))
 def spam_time(client, message):
 
@@ -83,7 +82,7 @@ def spam_time(client, message):
         unit = args[2]
         text = args[3]
 
-        sleep = time_spam(delay, unit)
+        sleep = unit(delay, unit)
         chat_id = message.chat.id
 
         time_spam[chat_id] = True
