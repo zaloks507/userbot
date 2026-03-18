@@ -1,4 +1,5 @@
 from pyrogram import Client, filters, enums
+from pyrogram.enums import ChatAction
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait, RPCError, BadRequest
 import os
@@ -46,7 +47,7 @@ def help(client, message):
 <code>.prof</code> — изменить что-то в профиле 
 <code>.q</code> — сделать цитату текста фотографией
 
-<code>.troll(1d,2,3)</code> — тролл текстом 
+<code>.troll(1,2,3)</code> — тролл текстом 
 <code>.dox</code> — доксинг 
 <code>.spam</code> — спам сообщениями 
 
@@ -63,10 +64,10 @@ def check_summer(client, message):
 
     today = date.today
 
-    start_summer = date(today.year, 6, 1)
+    start_summer = datetime(today.year, 6, 1)
 
     if today > start_summer:
-        start_summer = date(today.year + 1, 6, 1)
+        start_summer = datetime(today.year + 1, 6, 1)
 
         message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
     
@@ -76,8 +77,6 @@ def check_summer(client, message):
         message.edit("Поздравляю с наступлением лета!")
     else:
         message.edit(f"До лета осталось: {delta.days} дней")
-
-print("🔥 MONSTER USERBOT STARTED")
 
 # --------- ПИНГ --------- 
 
@@ -332,7 +331,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL\Troll.txt", 'r', encoding='utf-8') as file:
+        with open("TROLL/Troll.txt", 'r', encoding='utf-8') as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -365,7 +364,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL\Troll2.txt", "r", encoding="utf-8") as file:
+        with open("TROLL/Troll2.txt", "r", encoding="utf-8") as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -397,7 +396,7 @@ def troll(client, message):
     delay = float(args[1]) if len(args) > 1 else 0.3
 
     try:
-        with open("TROLL\Troll3.txt", "r", encoding="utf-8") as file:
+        with open("TROLL/Troll3.txt", "r", encoding="utf-8") as file:
             text = file.read().strip()
     except:
         message.edit("Файл для троллинга не найден")
@@ -664,10 +663,12 @@ def auto(cient, message):
     if message.from_user.id in auto_users:
         phrases = random.choice(phrases)
 
+        client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
+        time.sleep(0.15)
         message.reply_text(phrases)
 
 # --------- --------- ---------
 
-print("🔥 MONSTER USERBOT STARTED")
+print("ZALOKS USERBOT STARTED")
 
 app.run()
