@@ -74,7 +74,7 @@ def start_typing(client, message):
     
     chat_id = message.chat.id
 
-    thread_id = message.message_thread_id if message.is_topic_message else None
+    thread_id = message.message_thread_id if message.message_thread_id else None
 
     typing_active[chat_id] = True
 
