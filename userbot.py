@@ -83,7 +83,7 @@ def spam_time(client, message):
 
         time_spam[chat_id] = True
 
-        message.edit(f"Спам начался!\n\nСпящее время: {sleep}{unit} \nТекст: {text})
+        message.edit(f"Спам начался!\n\nСпящее время: {sleep}{unit} \nТекст: {text}")
 
         while time_spam.get(chat_id):
             client.send_message(chat_id, text)
