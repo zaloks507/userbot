@@ -53,34 +53,7 @@ def help(client, message):
 <code>.addbul</code> — троллинг ответом на каждое сообщение пользователя
 <code>.fake</code> — фейк сообщение фотографией
 <code>.summer</code> — сколько дней осталось до ЛЕТА
-
-<code>.typing</code> — включение бесконечного тайпинга
-<code>.stoptyping</code> — выключение бесконечного тайпинга 
 """, parse_mode=enums.ParseMode.HTML)
-
-# --------- TYPING ---------
-def typing_loop(client, chat_id, thread_id):
-    try:
-        while typing_active.get(chat_id, False):
-            client.send_chat_action(chat_id, enums.ChatAction.TYPING, message_thread_id=thread_id)
-            time.sleep(4)
-    except Exception as e:
-        pass
-
-@app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def start_typing(client, message):
-
-    message.edit("Команда сработала")
-    
-    chat_id = message.chat.id
-
-    typing_active[chat_id] = True
-
-    threading.Thread(target=typing_loop, args=(client, chat_id, thread_id), daemon=True).start()
-
-    message.edit("Бесконечный тайпинг включен")
-
-# --------------------------------------------
 
 #------- SUMMER ---------
 
