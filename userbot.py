@@ -67,7 +67,7 @@ def typing_loop(client, chat_id, thread_id=None):
             time.sleep(5)
         except Exception as e:
             print(f"Ошибка: {e}")
-@app.on_message(filters.me & filters.command("typing", prefixes='.')
+@app.on_message(filters.me & filters.command("typing", prefixes='.'))
 def type(client, message):
     chat_id = message.chat.id
 
