@@ -79,7 +79,7 @@ async def start_typing(client, message):
     task = asyncio.create_task(typing_loop(client, chat_id))
     typing_active[chat_id] = task
 
-    message.edit("Тайпинг запущен")
+    await message.edit("Тайпинг запущен")
 
 # --------------------------------------------
 
