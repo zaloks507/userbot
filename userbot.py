@@ -60,35 +60,30 @@ def help(client, message):
 
 # --------- TYPING ---------
 
-def typing_loop(client, chat_id):
-    while typing_active.get(chat_id):
+def typing_loop(client, chat_id, thread_id=None):
+    while typing_active.get(chat_id, False):
         try:
-            client.send_chat_action(chat_id, ChatAction.TYPING)
+            client.send_chat_action(chat_id, enums.TYPING, thread_id)
             time.sleep(5)
-        except:
-            break
-
-@app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def typing_start(client, message):
+        except Exception as e:
+            print(f"Ошибка: {e}")
+@app.on_message(filters.me & filters.command("typing", prefixes='.')
+def type(client, message):
     chat_id = message.chat.id
+
+    if typing_active.get(chat_id):
+        message.edit("Тайпинг уже запущен")
+        return
+
+    thread_id = message.message_thread_id if message.is_topic_message else None
 
     typing_active[chat_id] = True
 
-    threading.Thread(target=typing_loop, args=(client, chat_id)).start()
+    threading.Thread(target=typing_loop, args=(chat_id, client, thread_id), daemon=True).start()
 
-    message.edit("Бесконечный тайпинг включен ✍️")
+    message.edit("Тайпинг в чате успешно запущен")
 
-@app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
-def stop_typ(client, message):
-    chat_id = message.chat.id
-
-    typing_active[chat_id] = False
-
-    message.edit("Бесконечный тайпинг выключен")
-
-# --------------------------------------------
-
-# --------- SUMMER ---------
+#------- SUMMER ---------
 
 @app.on_message(filters.me & filters.command("summer", prefixes='.'))
 def check_summer(client, message):
@@ -98,7 +93,7 @@ def check_summer(client, message):
     start_summer = date(today.year, 6, 1)
 
     if today > start_summer:
-        start_summer = date(today.year + 1, 6, 1)
+        start_summer = dastartday.year + 1, 6, 1)
 
         message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
     
