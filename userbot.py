@@ -68,6 +68,15 @@ def get_time(value, unit):
 def spam_time(client, message):
 
     args = message.text.split(maxsplit=3)
+
+    if len(args) > 1 and args[1] == "stop":
+        time_spam[chat_id] = False
+        message.edit("Спам остановлен! Восстановить: .sp delay s|m|h text")
+        return
+
+    if len(args) < 4:
+        message.edit("Используй: .sp delay s|m|h text")
+        return
     
     try:
         delay = int(args[1])
@@ -84,16 +93,6 @@ def spam_time(client, message):
         while time_spam.get(chat_id):
             client.send_message(chat_id, text)
             time.sleep(sleep)
-
-        
-        if len(args) > 1 and args[1] == "stop":
-            time_spam[chat_id] = False
-            message.edit("Спам остановлен! Восстановить: .sp delay s|m|h text")
-            return
-
-        if len(args) < 4:
-            message.edit("Используй: .sp delay s|m|h text")
-            return
     
     except Exception as e:
         message.edit(f"Возникла ошибка: {e}")
