@@ -70,6 +70,7 @@ def spam_time(client, message):
     args = message.text.split(maxsplit=3)
 
     if len(args) > 1 and args[1] == "stop":
+        chat_id = message.chat.id
         time_spam[chat_id] = False
         message.edit("Спам остановлен! Восстановить: .sp delay s|m|h text")
         return
