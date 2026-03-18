@@ -61,28 +61,34 @@ def help(client, message):
 # --------- TYPING ---------
 
 def typing_loop(client, chat_id, thread_id=None):
+    # Цикл работает, пока в словаре для этого чата стоит True
     while typing_active.get(chat_id, False):
         try:
+            # В синхронном Pyrogram await не нужен
             client.send_chat_action(chat_id, enums.ChatAction.TYPING, thread_id)
-            time.sleep(5)
+            time.sleep(4) # Спим чуть меньше 5 секунд, чтобы статус не мигал
         except Exception as e:
             print(f"Ошибка: {e}")
+            break
+
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def type(client, message):
+def type_cmd(client, message):
     chat_id = message.chat.id
-
-    if typing_active.get(chat_id):
-        message.edit("Тайпинг уже запущен")
-        return
-
     thread_id = message.message_thread_id if message.is_topic_message else None
 
-    typing_active[chat_id] = True
-
-    threading.Thread(target=typing_loop, args=(client, chat_id, thread_id), daemon=True).start()
-
-    message.edit("Тайпинг в чате успешно запущен")
-
+    # Проверяем, запущен ли уже тайпинг
+    if typing_active.get(chat_id):
+        typing_active[chat_id] = False # Выключаем
+        message.edit("Тайпинг остановлен")
+    else:
+        typing_active[chat_id] = True # Включаем
+        # ИСПРАВЛЕНО: Аргументы передаем в том же порядке, что и в def typing_loop
+        threading.Thread(
+            target=typing_loop, 
+            args=(client, chat_id, thread_id), 
+            daemon=True
+        ).start()
+        message.edit("Тайпинг запущен")
 #------- SUMMER ---------
 
 @app.on_message(filters.me & filters.command("summer", prefixes='.'))
