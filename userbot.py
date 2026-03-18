@@ -79,7 +79,7 @@ def type(client, message):
 
     typing_active[chat_id] = True
 
-    threading.Thread(target=typing_loop, args=(chat_id, client, thread_id), daemon=True).start()
+    threading.Thread(target=typing_loop, args=(client, chat_id, thread_id), daemon=True).start()
 
     message.edit("Тайпинг в чате успешно запущен")
 
