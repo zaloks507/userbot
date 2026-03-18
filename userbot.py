@@ -21,7 +21,7 @@ bio = "𝙵𝟺𝙲𝙺 𝚉𝟺𝚕𝟶𝙺𝚂 | #ждулето"
 avatar = "avatar.png"
 
 troll_active = {}
-spam_time = {}
+time_spam = {}
 
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
