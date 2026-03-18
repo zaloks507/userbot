@@ -60,9 +60,9 @@ def help(client, message):
 
 # --------- SPAM TIME ---------
 
-def unit(value, unit):
+def get_time(value, unit):
     units = {"s": 1, "m": 60, "h": 3600}
-    return value * units.get(units, 1)
+    return value * units.get(unit, 1)
 
 @app.on_message(filters.me & filters.command("sp", prefixes='.'))
 def spam_time(client, message):
@@ -82,7 +82,7 @@ def spam_time(client, message):
         unit = args[2]
         text = args[3]
 
-        sleep = unit(delay, unit)
+        sleep = get_time(delay, unit)
         chat_id = message.chat.id
 
         time_spam[chat_id] = True
