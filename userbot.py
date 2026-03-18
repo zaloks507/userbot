@@ -63,7 +63,7 @@ def help(client, message):
 def typing_loop(client, chat_id, thread_id=None):
     while typing_active.get(chat_id, False):
         try:
-            client.send_chat_action(chat_id, enums.TYPING, thread_id)
+            client.send_chat_action(chat_id, enums.ChatAction.TYPING, thread_id)
             time.sleep(5)
         except Exception as e:
             print(f"Ошибка: {e}")
