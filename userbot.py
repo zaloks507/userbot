@@ -93,7 +93,7 @@ def check_summer(client, message):
     start_summer = date(today.year, 6, 1)
 
     if today > start_summer:
-        start_summer = dastartday.year + 1, 6, 1)
+        start_summer = date(today.year + 1, 6, 1)
 
         message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
     
