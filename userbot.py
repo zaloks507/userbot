@@ -51,9 +51,32 @@ def help(client, message):
 
 <code>.addbul</code> — троллинг ответом на каждое сообщение пользователя
 <code>.fake</code> — фейк сообщение фотографией
-<code>.typing</code> — эффект тайпинга
-<code>.stoptyping</code> — остановить тайпинг
+
+<code>.summer</code> — сколько осталось до лета
 """, parse_mode=enums.ParseMode.HTML)
+
+# --------- SUMMER ---------
+
+@app.on_message(filters.me & filters.command("summer", prefixes='.'))
+def check_summer(client, message):
+
+    today = date.today
+
+    start_summer = date(today.year, 6, 1)
+
+    if today > start_summer:
+        start_summer = date(today.year + 1, 6, 1)
+
+        message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
+    
+    delta = start_summer - today
+
+    if delta == 0:
+        message.edit("Поздравляю с наступлением лета!")
+    else:
+        message.edit(f"До лета осталось: {delta.days} дней")
+
+print("🔥 MONSTER USERBOT STARTED")
 
 # --------- ПИНГ --------- 
 
@@ -644,66 +667,6 @@ def auto(cient, message):
 
 # --------- --------- ---------
 
-# --------- SUMMER ---------
-
-@app.on_message(filters.me & filters.command("summer", prefixes='.'))
-def check_summer(client, message):
-
-    today = date.today
-
-    start_summer = date(today.year, 6, 1)
-
-    if today > start_summer:
-        start_summer = date(today.year + 1, 6, 1)
-
-        message.edit(f"Лето уже прошло, до следующего лета осталось: {start_summer} дней")
-    
-    delta = start_summer - today
-
-    if delta == 0:
-        message.edit("Поздравляю с наступлением лета!")
-    else:
-        message.edit(f"До лета осталось: {delta.days} дней")
-
 print("🔥 MONSTER USERBOT STARTED")
-
-# --------- SPAM & TIME ---------
-
-def get_time(value, unit):
-    units = {"s": 1, "m": 60, "h": 3600}
-    return value * units.get(units, 1)
-
-@app.on_message(filters.me & filters.command("sp", prefixes='.'))
-def time_spam(client, message):
-    
-    args = message.text.split(maxsplit=3)
-
-    if len(args) > 1 and args[1] == "stop":
-        message.edit("Временный спам закончен, начать заного: .sp delay s|m|h текст")
-        return
-
-    if len(args) < 4:
-        message.edit("Используй: .sp delay s|m|h текст")
-        return
-    
-    try:
-        delay_sleep = int(args[1])
-        unit = args[2]
-        text = args[3]
-
-        sleep = time_spam(delay_sleep, unit)
-        chat_id = message.chat_id
-
-        spam_time[chat_id] = True
-
-        message.edit(f"Спам начался!\nСпящее время: {sleep} \nТекст: {text}")
-
-        while spam_time.get(chat_id):
-            client.send_message(chat_id, text)
-            time.sleep(sleep)
-    except Exception as e:
-        message.edit(f"Возникла ошибка: {e}")
-    
-# --------- --------- ---------
 
 app.run()
