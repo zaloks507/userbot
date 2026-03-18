@@ -55,7 +55,48 @@ def help(client, message):
 <code>.fake</code> — фейк сообщение фотографией
 
 <code>.summer</code> — сколько осталось до лета
+<code>.sp</code> — спам сообщений с определенным промежутком времени
 """, parse_mode=enums.ParseMode.HTML)
+
+# --------- SPAM TIME ---------
+
+def unit(value, unit):
+    units = {"s": 1, "m": 60, "h": 3600}
+    return value * units.get(units, 1)
+
+
+@app.on_message(filters.me & filters.command("sp", prefixes='.'))
+def spam_time(client, message):
+
+    args = message.text.split(maxsplit=3)
+
+    if len(args) > 1 and args[1] == "stop":
+        message.edit("Спам остановлен! Восстановить: .sp delay s|m|h text")
+        return
+    
+    if len(args) < 4:
+        message.edit("Используй: .sp delay s|m|h text")
+        return
+    
+    try:
+        delay = int(args[1])
+        unit = args[2]
+        text = args[3]
+
+        sleep = time_spam(delay, unit)
+        chat_id = message.chat.id
+
+        time_spam[chat_id] = True
+
+        message.edit(f"Спам начался!\nСпящее время: {sleep}{unit} \nТекст: {text}")
+
+        while time_spam.get(chat_id):
+            client.send_message(chat_id, text)
+            time.sleep(sleep)
+    except Exception as e:
+        message.edit(f"Возникла ошибка: {e}")
+
+# --------- --------- ---------
 
 # --------- SUMMER ---------
 
