@@ -78,7 +78,7 @@ async def typing(client, message):
 
 @app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
 def stoptyping(client, message):
-    chat_title = message.chat.title
+    chat_title = message.chat.title.upper()
     chat_id = message.chat.id
     typing_active[chat_id] = False
     message.edit(f"Бесконченый тайпинг в чате <b>{chat_title}</b> остановлен", parse_mode=enums.ParseMode.HTML)
