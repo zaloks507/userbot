@@ -23,6 +23,7 @@ avatar = "avatar.png"
 troll_active = {}
 time_spam = {}
 typing_active = {}
+react_active = {}
 
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
