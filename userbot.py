@@ -110,12 +110,14 @@ def reacting_activ(client, message):
 def sr(client, message):
 
     chat_id = message.chat.id
-
-    if chat_id in react_active:
-        del react_active[chat_id]
-        message.edit("Автореакции остановлены")
-    elif chat_id not in react_active:
-        message.edit("Автореакции не найдены")
+    try:
+        if chat_id in react_active:
+            react_active.pop(chat_id)
+            message.edit("Автореакции остановлены")
+        elif chat_id not in react_active:
+            message.edit("Автореакции не найдены")
+    except Exception as e:
+        message.edit(f"Возникла ошибка: {e}")
 
 # --------- --------- ---------
 
