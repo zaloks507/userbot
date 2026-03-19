@@ -62,17 +62,14 @@ def help(client, message):
 # --------- TYPING ---------
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
-def typing(client, message):
-
+async def typing(client, message):
     chat_id = message.chat.id
-
     typing_active[chat_id] = True
+    await message.edit("Бесконченый тайпинг включен")
 
-    while typing_active.get(chat_id, True):
-        client.send_chat_action(chat_id, enums.ChatAction.TYPING)
-        message.edit("Бесконченый тайпинг включен")
-        time.sleep(5)
-        return
+    while typing_active.get(chat_id):
+        await client.send_chat_action(chat_id, enums.ChatAction.TYPING)
+        await asyncio.sleep(5)
 
 # --------- --------- ---------
 
