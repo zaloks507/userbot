@@ -65,62 +65,6 @@ def help(client, message):
 <code>.sr</code> — остановка автореакций
 """, parse_mode=enums.ParseMode.HTML)
 
-# --------- REACT ---------
-
-@app.on_message(filters.me & filters.command("react", prefixes='.'))
-def react(client, message):
-
-    args = message.text.split(maxsplit=1)
-
-    if not message.reply_to_message:
-        message.edit("Ответь на сообщение пользователя")
-        return
-    
-    if len(args) < 2:
-        message.edit("Используй: .react эмоция")
-        return
-    
-    emoji = args[1]
-
-    user_id = message.reply_to_message.from_user
-
-    chat_id = message.chat.id
-
-    react_active[chat_id] = (user_id.id, emoji)
-
-    username = f"@{user_id.username}" if user_id.username else f"{user_id.first_name}"
-
-    message.edit(f"Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
-
-@app.on_message(filters.text)
-def reacting_activ(client, message):
-
-    chat_id = message.chat.id
-    
-    if chat_id in react_active:
-        user_id, emoji = react_active[chat_id]
-
-        if message.from_user and message.from_user.id == user_id:
-            try:
-                client.send_reaction(chat_id, message.id, emoji)
-            except Exception as e:
-                message.edit(f"Ошибка: {e}")
-
-@app.on_message(filters.me & filters.command("sr", prefixes='.'))
-def sr(client, message):
-
-    chat_id = message.chat.id
-    try:
-        if chat_id in react_active:
-            react_active.remove(chat_id)
-            message.edit("Автореакции остановлены")
-        elif chat_id not in react_active:
-            message.edit("Автореакции не найдены")
-    except Exception as e:
-        message.edit(f"Возникла ошибка: {e}")
-
-# --------- --------- ---------
-
 # --------- TYPING ---------
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
