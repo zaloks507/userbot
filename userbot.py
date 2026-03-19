@@ -69,14 +69,14 @@ def help(client, message):
 react_active = {}
 
 @app.on_message(filters.me & filters.command("react", prefixes='.'))
-def react(client, message):
+async def react(client, message):
     if not message.reply_to_message:
-        message.edit("❌ Ответь на сообщение пользователя")
+        await message.edit("❌ Ответь на сообщение пользователя")
         return
 
     args = message.text.split(maxsplit=1)
     if len(args) < 2:
-        message.edit("❌ Используй: .react эмоция")
+        await message.edit("❌ Используй: .react эмоция")
         return
 
     emoji = args[1]
@@ -89,7 +89,7 @@ def react(client, message):
     react_active[chat_id][user.id] = emoji
 
     username = f"@{user.username}" if user.username else user.first_name
-    message.edit(f"✅ Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
+    await message.edit(f"✅ Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
 
 @app.on_message(filters.text)
 def reacting_activ(client, message):
@@ -101,23 +101,23 @@ def reacting_activ(client, message):
     if chat_id in react_active and user.id in react_active[chat_id]:
         emoji = react_active[chat_id][user.id]
         try:
-            client.send_reaction(chat_id, message.id, emoji)
+            await client.send_reaction(chat_id, message.id, emoji)
         except Exception as e:
-            print(f"Ошибка при реакции: {e}")
+            await message,edit(f"Ошибка при реакции: {e}")
 
 @app.on_message(filters.me & filters.command("sr", prefixes='.'))
 def sr(client, message):
     chat_id = message.chat.id
 
     if chat_id in react_active:
-        react_active.pop(chat_id)
+        del react_active(chat_id)
         try:
-            message.edit("🛑 Все автореакции в этом чате остановлены")
+            await message.edit("🛑 Все автореакции в этом чате остановлены")
         except:
             pass
     else:
         try:
-            message.edit("❌ Автореакции не найдены")
+            await message.edit("❌ Автореакции не найдены")
         except:
             pass
 
