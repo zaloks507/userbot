@@ -68,6 +68,7 @@ async def typing(client, message):
     await message.edit("Бесконченый тайпинг включен")
 
     while typing_active.get(chat_id):
+        await asyncio.sleep(5)
         await client.send_chat_action(chat_id, enums.ChatAction.TYPING)
         await asyncio.sleep(5)
 
