@@ -110,7 +110,7 @@ def sr(client, message):
     chat_id = message.chat.id
 
     if chat_id in react_active:
-        del react_active(chat_id)
+        del react_active[chat_id][user.id]
         try:
             await message.edit("🛑 Все автореакции в этом чате остановлены")
         except:
