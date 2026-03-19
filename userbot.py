@@ -65,7 +65,7 @@ def help(client, message):
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
 async def typing(client, message):
-    chat_title = message.chat.title
+    chat_title = message.chat.title.upper()
     chat_id = message.chat.id
     typing_active[chat_id] = True
     await message.edit(f"Бесконченый тайпинг в чате <b>{chat_title}</b> запущен", parse_mode=enums.ParseMode.HTML)
