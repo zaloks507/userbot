@@ -112,7 +112,7 @@ def sr(client, message):
     chat_id = message.chat.id
     try:
         if chat_id in react_active:
-            react_active.pop(chat_id)
+            react_active.remove(chat_id)
             message.edit("Автореакции остановлены")
         elif chat_id not in react_active:
             message.edit("Автореакции не найдены")
