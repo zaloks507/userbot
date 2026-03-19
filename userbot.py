@@ -65,64 +65,6 @@ def help(client, message):
 <code>.sr</code> — остановка автореакций
 """, parse_mode=enums.ParseMode.HTML)
 
-# --------- REACT ---------
-react_active = {}
-
-@app.on_message(filters.me & filters.command("react", prefixes='.'))
-async def react(client, message):
-    if not message.reply_to_message:
-        await message.edit("❌ Ответь на сообщение пользователя")
-        return
-
-    args = message.text.split(maxsplit=1)
-    if len(args) < 2:
-        await message.edit("❌ Используй: .react эмоция")
-        return
-
-    emoji = args[1]
-    user = message.reply_to_message.from_user
-    chat_id = message.chat.id
-
-    if chat_id not in react_active:
-        react_active[chat_id] = {}
-
-    react_active[chat_id][user.id] = emoji
-
-    username = f"@{user.username}" if user.username else user.first_name
-    await message.edit(f"✅ Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
-
-@app.on_message(filters.text)
-async def reacting_activ(client, message):
-    chat_id = message.chat.id
-    user = message.from_user
-    if not user:
-        return
-
-    if chat_id in react_active and user.id in react_active[chat_id]:
-        emoji = react_active[chat_id][user.id]
-        try:
-            await client.send_reaction(chat_id, message.id, emoji)
-        except Exception as e:
-            await message,edit(f"Ошибка при реакции: {e}")
-
-@app.on_message(filters.me & filters.command("sr", prefixes='.'))
-async def sr(client, message):
-    chat_id = message.chat.id
-
-    if chat_id in react_active:
-        del react_active[chat_id][user.id]
-        try:
-            await message.edit("🛑 Все автореакции в этом чате остановлены")
-        except:
-            pass
-    else:
-        try:
-            await message.edit("❌ Автореакции не найдены")
-        except:
-            pass
-
-# --------- --------- ---------
-
 # --------- TYPING ---------
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
