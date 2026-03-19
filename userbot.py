@@ -92,7 +92,7 @@ async def react(client, message):
     await message.edit(f"✅ Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
 
 @app.on_message(filters.text)
-def reacting_activ(client, message):
+async def reacting_activ(client, message):
     chat_id = message.chat.id
     user = message.from_user
     if not user:
@@ -106,7 +106,7 @@ def reacting_activ(client, message):
             await message,edit(f"Ошибка при реакции: {e}")
 
 @app.on_message(filters.me & filters.command("sr", prefixes='.'))
-def sr(client, message):
+async def sr(client, message):
     chat_id = message.chat.id
 
     if chat_id in react_active:
