@@ -70,10 +70,9 @@ def typing(client, message):
 
     while typing_active.get(chat_id, True):
         client.send_chat_action(chat_id, enums.ChatAction.TYPING)
+        message.edit("Бесконченый тайпинг включен")
         time.sleep(5)
         return
-    
-    message.edit("Бесконченый тайпинг включен")
 
 # --------- --------- ---------
 
