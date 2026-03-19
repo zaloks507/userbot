@@ -22,6 +22,7 @@ avatar = "avatar.png"
 
 troll_active = {}
 time_spam = {}
+typing_active = {}
 
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
@@ -57,6 +58,24 @@ def help(client, message):
 <code>.summer</code> — сколько осталось до лета
 <code>.sp</code> — спам сообщений с определенным промежутком времени
 """, parse_mode=enums.ParseMode.HTML)
+
+# --------- TYPING ---------
+
+@app.on_message(filters.me & filters.command("typing", prefixes='.'))
+def typing(client, message):
+
+    chat_id = message.chat.id
+
+    typing_active[chat_id] = True
+
+    while typing_active.get(chat_id, True):
+        client.send_chat_action(chat_id, enums.ChatAction.TYPING)
+        time.sleep(5)
+        return
+    
+    message.edit("Бесконченый тайпинг включен")
+
+# --------- --------- ---------
 
 # --------- SPAM TIME ---------
 
