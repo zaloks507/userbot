@@ -66,58 +66,60 @@ def help(client, message):
 """, parse_mode=enums.ParseMode.HTML)
 
 # --------- REACT ---------
+react_active = {}
 
 @app.on_message(filters.me & filters.command("react", prefixes='.'))
 def react(client, message):
+    if not message.reply_to_message:
+        message.edit("❌ Ответь на сообщение пользователя")
+        return
 
     args = message.text.split(maxsplit=1)
-
-    if not message.reply_to_message:
-        message.edit("Ответь на сообщение пользователя")
-        return
-    
     if len(args) < 2:
-        message.edit("Используй: .react эмоция")
+        message.edit("❌ Используй: .react эмоция")
         return
-    
+
     emoji = args[1]
-
-    user_id = message.reply_to_message.from_user
-
+    user = message.reply_to_message.from_user
     chat_id = message.chat.id
 
-    react_active[chat_id] = (user_id.id, emoji)
+    if chat_id not in react_active:
+        react_active[chat_id] = {}
 
-    username = f"@{user_id.username}" if user_id.username else f"{user_id.first_name}"
+    react_active[chat_id][user.id] = emoji
 
-    message.edit(f"Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
+    username = f"@{user.username}" if user.username else user.first_name
+    message.edit(f"✅ Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
 
 @app.on_message(filters.text)
 def reacting_activ(client, message):
-
     chat_id = message.chat.id
-    
-    if chat_id in react_active:
-        user_id, emoji = react_active[chat_id]
+    user = message.from_user
+    if not user:
+        return
 
-        if message.from_user and message.from_user.id == user_id:
-            try:
-                client.send_reaction(chat_id, message.id, emoji)
-            except Exception as e:
-                message.edit(f"Ошибка: {e}")
+    if chat_id in react_active and user.id in react_active[chat_id]:
+        emoji = react_active[chat_id][user.id]
+        try:
+            client.send_reaction(chat_id, message.id, emoji)
+        except Exception as e:
+            print(f"Ошибка при реакции: {e}")
 
 @app.on_message(filters.me & filters.command("sr", prefixes='.'))
 def sr(client, message):
-
     chat_id = message.chat.id
-    try:
-        if chat_id in react_active:
-            react_active.pop(chat_id)
-            message.edit("Автореакции остановлены")
-        elif chat_id not in react_active:
-            message.edit("Автореакции не найдены")
-    except Exception as e:
-        message.edit(f"Возникла ошибка: {e}")
+
+    if chat_id in react_active:
+        react_active.pop(chat_id)
+        try:
+            message.edit("🛑 Все автореакции в этом чате остановлены")
+        except:
+            pass
+    else:
+        try:
+            message.edit("❌ Автореакции не найдены")
+        except:
+            pass
 
 # --------- --------- ---------
 
