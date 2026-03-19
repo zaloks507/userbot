@@ -60,9 +60,6 @@ def help(client, message):
 <code>.sp</code> — спам сообщений с определенным промежутком времени
 <code>.typing</code> — имитация тайпинга в чате
 <code>.stoptyping</code> — остановить тайпинг
-
-<code>.react</code> — ставит реакции на сообщение пользователя
-<code>.sr</code> — остановка автореакций
 """, parse_mode=enums.ParseMode.HTML)
 
 # --------- TYPING ---------
