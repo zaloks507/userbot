@@ -54,23 +54,33 @@ def help(client, message):
 
 <code>.addbul</code> — троллинг ответом на каждое сообщение пользователя
 <code>.fake</code> — фейк сообщение фотографией
-
 <code>.summer</code> — сколько осталось до лета
+
 <code>.sp</code> — спам сообщений с определенным промежутком времени
+<code>.typing</code> — имитация тайпинга в чате
+<code>.stoptyping</code> — остановить тайпинг
 """, parse_mode=enums.ParseMode.HTML)
 
 # --------- TYPING ---------
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
 async def typing(client, message):
+    chat_title = message.chat.title
     chat_id = message.chat.id
     typing_active[chat_id] = True
-    await message.edit("Бесконченый тайпинг включен")
+    await message.edit(f"Бесконченый тайпинг в чате <b>{chat_title}</b> запущен", parse_mode=enums.ParseMode.HTML)
 
     while typing_active.get(chat_id):
         await asyncio.sleep(5)
         await client.send_chat_action(chat_id, enums.ChatAction.TYPING)
         await asyncio.sleep(5)
+
+@app.on_message(filters.me & filters.command("stoptyping", prefixes='.'))
+def stoptyping(client, message):
+    chat_title = message.chat.title
+    chat_id = message.chat.id
+    typing_active[chat_id] = False
+    message.edit(f"Бесконченый тайпинг в чате <b>{chat_title}</b> остановлен", parse_mode=enums.ParseMode.HTML)
 
 # --------- --------- ---------
 
