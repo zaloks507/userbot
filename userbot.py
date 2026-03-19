@@ -89,7 +89,7 @@ def react(client, message):
 
     username = f"@{user_id.username}" if user_id.username else f"{user_id.first_name}"
 
-    message.edit(f"Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}"}")
+    message.edit(f"Теперь на каждое сообщение от {username} будет ставить реакция: {emoji}")
 
 @app.on_message(filters.text)
 def reacting_activ(client, message):
