@@ -731,7 +731,7 @@ def stopbul(client, message):
     else:
         message.edit("Пользователь уже удален или не найден")
 
-@app.on_message(filters.text)
+@app.on_message(filters.text & ~filters.me)
 def auto(client, message):
 
     with open("BUL/phrases.txt", "r", encoding='utf-8') as f:
@@ -770,7 +770,7 @@ async def send_react(client, message):
     user = f"@{target_user.username}" if target_user.username else f"{target_user.first_name}"
     await message.edit(f"Автореакция включена!\n\nЦель: {user} \nРеакция: {emoji}")
     
-@app.on_message(filters.me & filters.command("sr", '.'))
+@app.on_message(filters.me & filters.command("sr", prefixes='.'))
 async def stop_react(client, message):
 
     target_user = message.reply_to_message.from_user
@@ -787,7 +787,7 @@ async def stop_react(client, message):
     else:
         await message.edit("Автореакция не найдена")
         
-@app.on_message(filters.text)
+@app.on_message(filters.text & ~filter.me)
 async def reacting(client, messagge):
 
     user = messagge.from_user
