@@ -73,7 +73,7 @@ async def stop_react(client, message):
         await message.edit("Автореакция не найдена")
         
 @app.on_message(filters.text)
-def reacting(client, messagge):
+async def reacting(client, messagge):
 
     user = messagge.from_user
 
