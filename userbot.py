@@ -56,7 +56,7 @@ async def send_react(client, message):
     await message.edit(f"Теперь на каждое сообщение от {user} будет ставить: {emoji}")
     
 @app.on_message(filters.me & filters.command("sr", '.'))
-def stop_react(client, message):
+async def stop_react(client, message):
 
     target_user = message.reply_to_message.from_user
 
