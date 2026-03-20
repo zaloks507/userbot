@@ -62,6 +62,60 @@ def help(client, message):
 <code>.stoptyping</code> — остановить тайпинг
 """, parse_mode=enums.ParseMode.HTML)
 
+# --------- REACT ---------
+
+@app.on_message(filters.me & filters.command("react", prefixes='.'))
+def send_react(client, message):
+
+    if not message.reply_to_message:
+        message.edit("Ответь на сообщение пользователя")
+        return
+    
+    args = message.text.split(maxsplit=1)
+
+    if len(args) < 2:
+        message.edit("Используй: .react эмоция")
+        return
+    
+    target_user = message.reply_to_message.from_user
+    user_id = target_user.id
+    emoji = args[1]
+
+    react_active[user_id] = emoji
+    
+    user = f"@{target_user.username}" if target_user.username else f"{target_user.first_name}"
+    message.edit(f"Теперь на каждое сообщение от {user} будет ставить: {emoji}")
+
+@app.on_message(filters.text)
+def reacting(client, messagge):
+
+    user = messagge.from_user
+
+    if user and user.id in react_active:
+        try:
+            messagge.react(react_active[user.id])
+        except Exception as e:
+            messagge.edit(f"Ошибка: {e}")
+
+@app.on_message(filters.me & filters.command("sr", '.'))
+def stop_react(client, message):
+
+    target_user = message.reply_to_message.from_user
+
+    if not target_user:
+        message.edit("Ответь на сообщение пользователя")
+        return
+    
+    user_id = target_user.id
+
+    if user_id in react_active:
+        del react_active[user_id]
+        message.edit("Автореакция выключена")
+    else:
+        message.edit("Автореакция не найдена")
+
+# --------- --------- ---------
+
 # --------- TYPING ---------
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
