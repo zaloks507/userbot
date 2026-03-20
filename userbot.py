@@ -769,6 +769,18 @@ async def send_react(client, message):
     
     user = f"@{target_user.username}" if target_user.username else f"{target_user.first_name}"
     await message.edit(f"Автореакция включена!\n\nЦель: {user} \nРеакция: {emoji}")
+
+@app.on_message(filters.text & ~filters.me)
+async def reacting(client, message):
+
+    user = messagge.from_user
+    chat_id = message.chat.id
+
+    if user and user.id in react_active:
+        try:
+            await client.send_reaction(chat_id, message.id, react_active[user.id])
+        except Exception as e:
+            await messagge.edit(f"Ошибка: {e}")
     
 @app.on_message(filters.me & filters.command("sr", prefixes='.'))
 async def stop_react(client, message):
@@ -786,19 +798,7 @@ async def stop_react(client, message):
         await message.edit("Автореакция выключена")
     else:
         await message.edit("Автореакция не найдена")
-        
-@app.on_message(filters.text & ~filters.me)
-async def reacting(client, message):
-
-    user = messagge.from_user
-    chat_id = message.chat.id
-
-    if user and user.id in react_active:
-        try:
-            await client.send_reaction(chat_id, message.id, react_active[user.id])
-        except Exception as e:
-            await messagge.edit(f"Ошибка: {e}")
-            
+              
 # --------- --------- ---------
 
 print("ZALOKS USERBOT STARTED")
