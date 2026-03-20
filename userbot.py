@@ -791,10 +791,12 @@ async def stop_react(client, message):
 async def reacting(client, messagge):
 
     user = messagge.from_user
+    user_id = user.id
+    chat_id = message.chat.id
 
     if user and user.id in react_active:
         try:
-            await messagge.react(react_active[user.id])
+            await client.send_reaction(chat_id, user_id, react_active[user.id])
         except Exception as e:
             await messagge.edit(f"Ошибка: {e}")
             
