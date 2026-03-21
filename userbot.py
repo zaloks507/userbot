@@ -49,7 +49,7 @@ def help(client, message):
 <code>.prof</code> — изменить что-то в профиле 
 <code>.q</code> — сделать цитату текста фотографией
 
-<code>.troll(1,2,3)</code> — тролл текстом 
+<code>.troll(1,2,3)</code> — троллинг спамом текста
 <code>.dox</code> — доксинг 
 <code>.spam</code> — спам сообщениями 
 
@@ -60,6 +60,9 @@ def help(client, message):
 <code>.sp</code> — спам сообщений с определенным промежутком времени
 <code>.typing</code> — имитация тайпинга в чате
 <code>.stoptyping</code> — остановить тайпинг
+
+<code>.react</code> — автореакция на сообщение пользователя
+<code>.unreact</code> — остановка автореакции
 """, parse_mode=enums.ParseMode.HTML)
 
 # --------- REACT ---------
@@ -92,7 +95,6 @@ async def react(client, message):
 async def add_react(client, message):
 
     user = message.from_user
-
     chat = message.chat.id
 
     if user and user.id in react_active:
@@ -104,6 +106,23 @@ async def add_react(client, message):
             )
         except Exception as e:
             print(f"Ошибка: {e}")
+
+@app.on_message(filters.me & filters.command("unreact", prefixes='.'))
+async def unreact(client, message):
+
+    reply_to = message.reply_to_message
+
+    if not reply_to:
+        await message.edit("Используй ответом на сообщение пользоватея")
+        return
+    
+    user_id = reply_to.from_user.id
+
+    if user_id in react_active:
+        del react_active[user_id]
+        await message.edit("Автореакция выключена")
+    else:
+        await message.edit("Автореакция не найдена")
             
 # --------- --------- ---------
 
@@ -352,11 +371,12 @@ def dox(client, message):
         
         for i in range(0, 101, 20):
             try: 
-                message.edit(f"Адресс найден! Начинаю собирать информация воедино {i}%...")
+                message.edit(f"Адрес найден! Начинаю собирать информация воедино {i}%...")
                 time.sleep(0.05)
             except FloodWait as e:
                 time.sleep(e.value)
-        
+
+        time.sleep(2.5)
 
         message.edit("""
 <b>ВСЯ ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ:</b>
