@@ -65,6 +65,67 @@ def help(client, message):
 <code>.unreact</code> — остановка автореакции
 """, parse_mode=enums.ParseMode.HTML)
 
+# --------- REACT ---------
+
+@app.on_message(filters.me & filters.command("react", prefixes='.'))
+async def react(client, message):
+
+    args = message.text.split(maxsplit=1)
+
+    if len(args) < 2:
+        await message.edit("Используй: .react эмоция")
+        return
+    
+    reply_to = message.reply_to_message
+
+    if not reply_to:
+        await message.edit("Используй ответом на сообщение пользователя")
+        return
+    
+    emoji = args[1]
+    user_id = reply_to.from_user.id
+
+    react_active[user_id] = emoji
+
+    user = f"@{reply_to.from_user.username}" if reply_to.from_user.username else f"{reply_to.from_user.first_name}"
+
+    await message.edit(f"<b>Автореакция включена</b> \n\nЦель: <code>{user}</code> \nЭмоция: {emoji}")
+
+@app.on_message(filters.text & ~filters.me)
+async def add_react(client, message):
+
+    user = message.from_user
+    chat = message.chat.id
+
+    if user and user.id in react_active:
+        try:
+            await client.send_reaction(
+                chat_id = chat,
+                message_id = message.id,
+                emoji = react_active[user.id]
+            )
+        except Exception as e:
+            print(f"Ошибка: {e}")
+
+@app.on_message(filters.me & filters.command("unreact", prefixes='.'))
+async def unreact(client, message):
+
+    reply_to = message.reply_to_message
+
+    if not reply_to:
+        await message.edit("Используй ответом на сообщение пользоватея")
+        return
+    
+    user_id = reply_to.from_user.id
+
+    if user_id in react_active:
+        del react_active[user_id]
+        await message.edit("Автореакция выключена")
+    else:
+        await message.edit("Автореакция не найдена")
+            
+# --------- --------- ---------
+
 # --------- TYPING ---------
 
 @app.on_message(filters.me & filters.command("typing", prefixes='.'))
