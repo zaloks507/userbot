@@ -796,7 +796,7 @@ def stopbul(client, message):
     else:
         message.edit("Пользователь уже удален или не найден")
 
-@app.on_message(filters.text & ~filters.me)
+@app.on_message(filters.incoming & ~filters.me)
 def auto(client, message):
 
     with open("BUL/phrases.txt", "r", encoding='utf-8') as f:
